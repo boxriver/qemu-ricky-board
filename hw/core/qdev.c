@@ -297,6 +297,12 @@ static int qdev_assert_realized_properly_cb(Object *obj, void *opaque)
 
     if (dev) {
         dc = DEVICE_GET_CLASS(dev);
+        if (!dev->realized) {
+            // 打印设备名称、路径、类型
+            fprintf(stderr, "❌ Device not realized: %s (type: %s)\n",
+                    object_get_canonical_path(OBJECT(dev)),
+                    object_get_typename(OBJECT(dev)));
+        }
         assert(dev->realized);
         assert(dev->parent_bus || !dc->bus_type);
     }
